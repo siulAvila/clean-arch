@@ -3,7 +3,7 @@ const FACTOR_DIGIT_2 = 11;
 const MAX_DIGITS_1 = 9;
 const MAX_DIGITS_2 = 10;
 
-function validate(str = '') {
+export function cpfValidate(str = '') {
   let cpf = extractDigits(str);
   if (invalidLength(cpf) || isInBlackList(cpf)) {
     return false;
@@ -42,9 +42,3 @@ function convertToNumberArray(digits: string) {
 function getCheckDigit(cpf: string) {
   return cpf.slice(9);
 }
-
-console.log(validate('00000000000'));
-console.log(validate('86446422784'));
-console.log(validate('864.464.227-84'));
-console.log(validate('91720489726'));
-console.log(validate('344858610-23'));
