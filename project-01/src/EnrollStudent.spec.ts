@@ -1,6 +1,6 @@
 import EnrollStudent from './EnrollStudent';
-import CPFError from './models/cpf/cpf.error';
-import NameError from './models/name/name.error';
+import CPFError from './value-objects/cpf/cpf.error';
+import NameError from './value-objects/name/name.error';
 
 it('Should not enroll without valid student name', () => {
   const enrollStudent = new EnrollStudent();

@@ -1,4 +1,4 @@
-import Student from './models/student/student';
+import Student from './entity/student/student';
 export default class EnrollStudent {
   enrolledStudents: Array<any>;
 
@@ -20,7 +20,8 @@ export default class EnrollStudent {
 
   hasStudentAlreadyEnrolled(student: Student) {
     return this.enrolledStudents.some(
-      (enrolledStudent) => enrolledStudent.student?.cpf === student.cpf
+      (enrolledStudent) =>
+        enrolledStudent.student?.cpf.value === student.cpf.value
     );
   }
 }
