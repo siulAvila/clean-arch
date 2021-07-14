@@ -1,21 +1,21 @@
-import CPFError from './cpf.error';
+import CPFError from "./cpf.error";
 
 export default class CPF {
-  FACTOR_DIGIT_1 = 10;
-  FACTOR_DIGIT_2 = 11;
-  MAX_DIGITS_1 = 9;
-  MAX_DIGITS_2 = 10;
+  private FACTOR_DIGIT_1 = 10;
+  private FACTOR_DIGIT_2 = 11;
+  private MAX_DIGITS_1 = 9;
+  private MAX_DIGITS_2 = 10;
 
   value: string;
 
-  constructor(value = '') {
+  constructor(value = "") {
     if (!this.cpfValidate(value)) {
       throw new CPFError();
     }
     this.value = value;
   }
 
-  private cpfValidate(str = '') {
+  private cpfValidate(str = "") {
     let cpf = this.extractDigits(str);
     if (this.invalidLength(cpf) || this.isInBlackList(cpf)) {
       return false;
@@ -36,7 +36,7 @@ export default class CPF {
 
   private isInBlackList(cpf: string) {
     const firstDigit = cpf[0];
-    return cpf.split('').every((c) => c === firstDigit);
+    return cpf.split("").every((c) => c === firstDigit);
   }
 
   private invalidLength(cpf: string) {
@@ -44,7 +44,7 @@ export default class CPF {
   }
 
   private extractDigits(cpf: string) {
-    return cpf.replace(/\D/g, '');
+    return cpf.replace(/\D/g, "");
   }
 
   private calculateDigit(cpf: string, factor: number, max: number) {

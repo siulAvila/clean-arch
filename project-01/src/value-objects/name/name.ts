@@ -1,8 +1,8 @@
-import NameError from './name.error';
+import NameError from "./name.error";
 
 export default class Name {
   value: string;
-  constructor(value = '') {
+  constructor(value = "") {
     if (!this.nameValidate(value)) {
       throw new NameError();
     }
