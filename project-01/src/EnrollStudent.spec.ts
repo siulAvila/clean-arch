@@ -1,9 +1,27 @@
 import EnrollStudent from "./EnrollStudent";
+import ClassRepositoryMemory from "./repository/class/class.repository.memory";
+import EnrollmentRepositoryMemory from "./repository/enrollment/enrollment.repository.memory";
+import LevelRepositoryMemory from "./repository/level/level.repository.memory";
+import ModuleRepositoryMemory from "./repository/module/module.repository.memory";
 import CPFError from "./value-objects/cpf/cpf.error";
 import NameError from "./value-objects/name/name.error";
 
+let enrollStudent: EnrollStudent;
+beforeEach(() => {
+  const levelRepository = new LevelRepositoryMemory();
+  const classRepository = new ClassRepositoryMemory();
+  const moduleRepository = new ModuleRepositoryMemory();
+  const enrollmentRepository = new EnrollmentRepositoryMemory();
+
+  enrollStudent = new EnrollStudent(
+    levelRepository,
+    classRepository,
+    moduleRepository,
+    enrollmentRepository
+  );
+});
+
 it("Should not enroll without valid student name", () => {
-  const enrollStudent = new EnrollStudent();
   const enrollmentRequest = {
     student: { name: "Ana" },
   };
@@ -23,7 +41,6 @@ it("Should not enroll without valid student cpf", () => {
     module: "3",
     class: "A",
   };
-  const enrollStudent = new EnrollStudent();
   expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(
     new CPFError().message
   );
@@ -40,7 +57,6 @@ it("Should not enroll duplicated student", () => {
     module: "3",
     class: "A",
   };
-  const enrollStudent = new EnrollStudent();
   enrollStudent.execute(enrollmentRequest);
   expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(
     new Error("Enrollment with duplicated student is not allowed")
@@ -59,9 +75,8 @@ it("Should generate enrollment code", () => {
     class: "A",
   };
 
-  const enrollStudent = new EnrollStudent();
-  const enrollCode = enrollStudent.execute(enrollmentRequest);
-  expect(enrollCode).toEqual("2021EM3A0001");
+  const enrollment = enrollStudent.execute(enrollmentRequest);
+  expect(enrollment.code).toEqual("2021EM3A0001");
 });
 
 it("Should not enroll student below minimum age", () => {
@@ -75,13 +90,12 @@ it("Should not enroll student below minimum age", () => {
     module: "3",
     class: "A",
   };
-  const enrollStudent = new EnrollStudent();
   expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(
     new Error("Student below minimum age")
   );
 });
 
-it.only("Should not enroll student over class capacity", () => {
+it("Should not enroll student over class capacity", () => {
   const studentEnrollRequestA = {
     student: {
       name: "Luigi Henrique",
@@ -113,7 +127,6 @@ it.only("Should not enroll student over class capacity", () => {
     module: "3",
     class: "A",
   };
-  const enrollStudent = new EnrollStudent();
   enrollStudent.execute(studentEnrollRequestA);
   enrollStudent.execute(studentEnrollRequestB);
   expect(() => enrollStudent.execute(studentEnrollRequestC)).toThrow(
