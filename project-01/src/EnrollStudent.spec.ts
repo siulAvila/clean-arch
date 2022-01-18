@@ -1,4 +1,5 @@
 import EnrollStudent from "./EnrollStudent";
+import Student from "./entity/student/student";
 import ClassRepositoryMemory from "./repository/class/class.repository.memory";
 import EnrollmentRepositoryMemory from "./repository/enrollment/enrollment.repository.memory";
 import LevelRepositoryMemory from "./repository/level/level.repository.memory";
@@ -34,7 +35,7 @@ it("Should not enroll without valid student cpf", () => {
   const enrollmentRequest = {
     student: {
       name: "Ana Silva",
-      cpf: "123.456.789-99",
+      cpf: "236.449.510-48",
       birthDate: "2002-03-12",
     },
     level: "EM",
@@ -48,11 +49,11 @@ it("Should not enroll without valid student cpf", () => {
 
 it("Should not enroll duplicated student", () => {
   const enrollmentRequest = {
-    student: {
+    student: new Student({
       name: "Ana Silva",
-      cpf: "832.081.519-34",
+      cpf: "269.056.560-97",
       birthDate: "2002-03-12",
-    },
+    }),
     level: "EM",
     module: "3",
     class: "A",
@@ -65,25 +66,26 @@ it("Should not enroll duplicated student", () => {
 
 it("Should generate enrollment code", () => {
   const enrollmentRequest = {
-    student: {
+    student: new Student({
       name: "Maria Carolina Fonseca",
-      cpf: "755.525.774-26",
+      cpf: "037.974.540-23",
       birthDate: "2002-03-12",
-    },
+    }),
     level: "EM",
     module: "3",
     class: "A",
   };
 
   const enrollment = enrollStudent.execute(enrollmentRequest);
-  expect(enrollment.code).toEqual("2021EM3A0001");
+  const enrollCodeExpected = `${new Date().getFullYear()}EM3A0001`
+  expect(enrollment.code).toEqual(enrollCodeExpected);
 });
 
 it("Should not enroll student below minimum age", () => {
   const enrollmentRequest = {
     student: {
       name: "Maria Carolina Fonseca",
-      cpf: "755.525.774-26",
+      cpf: "681.845.980-33",
       birthDate: "2012-03-12",
     },
     level: "EM",
@@ -99,7 +101,7 @@ it("Should not enroll student over class capacity", () => {
   const studentEnrollRequestA = {
     student: {
       name: "Luigi Henrique",
-      cpf: "538.657.420-50",
+      cpf: "114.662.760-29",
       birthDate: "2002-03-12",
     },
     level: "EM",
@@ -109,7 +111,7 @@ it("Should not enroll student over class capacity", () => {
   const studentEnrollRequestB = {
     student: {
       name: "Liz Maria",
-      cpf: "293.605.980-11",
+      cpf: "059.136.590-15",
       birthDate: "2002-03-12",
     },
     level: "EM",
@@ -120,7 +122,7 @@ it("Should not enroll student over class capacity", () => {
   const studentEnrollRequestC = {
     student: {
       name: "Paulo Jose",
-      cpf: "720.423.440-52",
+      cpf: "465.386.700-32",
       birthDate: "2002-03-12",
     },
     level: "EM",

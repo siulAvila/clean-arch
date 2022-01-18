@@ -3,8 +3,7 @@ import CPF from "../../value-objects/cpf/cpf";
 import EnrollmentRepositoryInterface from "./enrollment.repository.interface";
 
 export default class EnrollmentRepositoryMemory
-  implements EnrollmentRepositoryInterface
-{
+  implements EnrollmentRepositoryInterface {
   enrolledStudents: Enrollment[];
 
   constructor() {
@@ -19,9 +18,9 @@ export default class EnrollmentRepositoryMemory
     return this.enrolledStudents;
   }
 
-  findByCpf(cpf: CPF): any {
+  findByCpf(cpf: string): any {
     return this.enrolledStudents.find(
-      (enrolledStudent) => enrolledStudent.student?.cpf.value === cpf.value
+      (enrolledStudent) => enrolledStudent.student?.cpf === cpf
     );
   }
 

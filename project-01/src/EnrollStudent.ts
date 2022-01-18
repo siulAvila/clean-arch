@@ -11,7 +11,7 @@ export default class EnrollStudent {
     private classRepository: ClassRepositoryInteface,
     private moduleRepository: ModuleRepositoryInteface,
     private enrollmentRepository: EnrollmentRepositoryInterface
-  ) {}
+  ) { }
 
   private checkStudentAlreadyEnrolled(student: Student) {
     const hasAlreadyEnrolled = this.enrollmentRepository.findByCpf(student.cpf);
@@ -50,10 +50,13 @@ export default class EnrollStudent {
   }
 
   execute(enrollmentRequest: any) {
+    const { name, cpf, birthDate } = enrollmentRequest.student;
     const student = new Student(
-      enrollmentRequest.student.name,
-      enrollmentRequest.student.cpf,
-      enrollmentRequest.student.birthDate
+      {
+        name,
+        cpf,
+        birthDate
+      }
     );
     const clazz = this.classRepository.getByCode(enrollmentRequest.class);
     const level = this.levelRepository.getByCode(enrollmentRequest.level);
