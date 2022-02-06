@@ -1,6 +1,8 @@
+import Classroom from "./entity/classroom";
 import Enrollment from "./entity/enrollment";
+import Module from "./entity/modules";
 import Student from "./entity/student";
-import ClassRepositoryInteface from "./repository/class/class.repository.interface";
+import ClassroomRepositoryInteface from "./repository/classroom/classroom.repository.interface";
 import EnrollmentRepositoryInterface from "./repository/enrollment/enrollment.repository.interface";
 import LevelRepositoryInterface from "./repository/level/level.repository.interface";
 import ModuleRepositoryInteface from "./repository/module/module.repository.interface";
@@ -8,7 +10,7 @@ import ModuleRepositoryInteface from "./repository/module/module.repository.inte
 export default class EnrollStudent {
   constructor(
     private levelRepository: LevelRepositoryInterface,
-    private classRepository: ClassRepositoryInteface,
+    private classroomRepository: ClassroomRepositoryInteface,
     private moduleRepository: ModuleRepositoryInteface,
     private enrollmentRepository: EnrollmentRepositoryInterface
   ) { }
@@ -27,7 +29,7 @@ export default class EnrollStudent {
     return `${currentYear}${level}${module}${className}${sequence}`;
   }
 
-  private checkStudentHasMinimiumAge(module: any, student: Student) {
+  private checkStudentHasMinimiumAge(module: Module, student: Student) {
     const studentAge = student.getAge();
     const minimumAge = module.minimumAge;
 
@@ -36,7 +38,7 @@ export default class EnrollStudent {
     }
   }
 
-  private checkOverCapacity(clazz: any, level: any, module: any) {
+  private checkOverCapacity(clazz: Classroom, level: any, module: Module) {
     const classCapacity = clazz.capacity;
 
     const studentEnrolledInClass = this.enrollmentRepository.findAllByClass(
@@ -49,6 +51,50 @@ export default class EnrollStudent {
     }
   }
 
+  private checkIfClassIsAlreadyFinished(clazz: Classroom): boolean {
+    const today = new Date().getTime();
+    const classEndDate = new Date(clazz.endDate).getTime()
+    if (today > classEndDate) {
+      throw new Error("Class is already finished");
+    }
+    return false;
+  }
+
+  private checkIfClassIsAlreadyStarted(clazz: Classroom): boolean {
+    const MILISECONDS_PER_SECOND = 1000;
+    const SECONDS_PER_HOUR = 3600;
+    const HOURS_PER_DAY = 24;
+    const MILISECONDS_PER_DAY = MILISECONDS_PER_SECOND * SECONDS_PER_HOUR * HOURS_PER_DAY
+    const todayInTime = new Date().getTime();
+    const classEndDateInTime = new Date(clazz.endDate).getTime()
+    const classStartDateInTime = new Date(clazz.startDate).getTime()
+
+    const classTotalOfDays = (classEndDateInTime - classStartDateInTime) / MILISECONDS_PER_DAY;
+    const daysBetweenEnrollAndStartOfClass = (todayInTime - classStartDateInTime) / MILISECONDS_PER_DAY;
+    const checkPercentageOfClass = (daysBetweenEnrollAndStartOfClass * 100) / classTotalOfDays
+
+    if (checkPercentageOfClass > 25) {
+      throw new Error("Class is already started");
+    }
+    return false;
+  }
+
+  private generateInvoices({ price }: Module, installments: number): any {
+
+    const invoceValue = price / installments;
+    const roundedValue = Math.floor(invoceValue);
+    const rest = price - (roundedValue * installments);
+
+    const invoices = new Array(installments).fill(null).map((_, index) => {
+      const instalment = index + 1;
+      return {
+        instalment,
+        value: instalment === installments ? roundedValue + rest : roundedValue
+      }
+    });
+    return invoices
+  }
+
   execute(enrollmentRequest: any) {
     const { name, cpf, birthDate } = enrollmentRequest.student;
     const student = new Student(
@@ -58,7 +104,7 @@ export default class EnrollStudent {
         birthDate
       }
     );
-    const clazz = this.classRepository.getByCode(enrollmentRequest.class);
+    const clazz = this.classroomRepository.getByCode(enrollmentRequest.class);
     const level = this.levelRepository.getByCode(enrollmentRequest.level);
     const module = this.moduleRepository.getByCode(
       enrollmentRequest.module,
@@ -67,14 +113,18 @@ export default class EnrollStudent {
     this.checkStudentHasMinimiumAge(module, student);
     this.checkOverCapacity(clazz, level, module);
     this.checkStudentAlreadyEnrolled(student);
+    this.checkIfClassIsAlreadyFinished(clazz);
+    this.checkIfClassIsAlreadyStarted(clazz);
     const enrollCode = this.generateEnrollCode(enrollmentRequest);
+    const invoices = this.generateInvoices(module, enrollmentRequest.installments)
     const enrollment = new Enrollment(
       {
         student,
         level: enrollmentRequest.level,
         module: enrollmentRequest.module,
         clazz: enrollmentRequest.class,
-        code: enrollCode
+        code: enrollCode,
+        invoices
       }
     );
 

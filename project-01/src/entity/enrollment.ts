@@ -6,6 +6,7 @@ export default class Enrollment {
   module: string;
   clazz: string;
   code: string;
+  invoices: any[]
 
   constructor(
     { student,
@@ -13,12 +14,14 @@ export default class Enrollment {
       module,
       clazz,
       code,
+      invoices,
     }: {
       student: Student,
       level: string,
       module: string,
       clazz: string,
       code: string,
+      invoices: any[]
     }
   ) {
     this.student = student;
@@ -26,5 +29,6 @@ export default class Enrollment {
     this.module = module;
     this.clazz = clazz;
     this.code = code;
+    this.invoices = invoices
   }
 }

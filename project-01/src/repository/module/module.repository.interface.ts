@@ -1,4 +1,6 @@
+import Module from "../../entity/modules";
+
 export default interface ModuleRepositoryInteface {
-  getAll(): any[];
-  getByCode(code: string, level: string): any;
+  getAll(): Module[];
+  getByCode(code: string, level: string): Module;
 }

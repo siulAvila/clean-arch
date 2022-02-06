@@ -1,9 +1,9 @@
+import Module from "../../entity/modules";
 import ModuleRepositoryInteface from "./module.repository.interface";
 
 export default class ModuleRepositoryMemory
-  implements ModuleRepositoryInteface
-{
-  modules: any[];
+  implements ModuleRepositoryInteface {
+  modules: Module[];
   constructor() {
     this.modules = [
       {
@@ -93,18 +93,17 @@ export default class ModuleRepositoryMemory
     ];
   }
 
-  getAll(): any[] {
+  getAll(): Module[] {
     return this.modules;
   }
 
-  getByCode(code: string, level: string): any {
+  getByCode(code: string, level: string): Module {
     const module = this.modules.find(
       (module) => module.code === code && module.level === level
     );
-    if (!code) {
+    if (!module) {
       throw Error("Module not found");
     }
-
     return module;
   }
 }

@@ -1,6 +1,6 @@
 import EnrollStudent from "./EnrollStudent";
 import Student from "./entity/student";
-import ClassRepositoryMemory from "./repository/class/class.repository.memory";
+import ClassroomRepositoryMemory from "./repository/classroom/classroom.repository.memory";
 import EnrollmentRepositoryMemory from "./repository/enrollment/enrollment.repository.memory";
 import LevelRepositoryMemory from "./repository/level/level.repository.memory";
 import ModuleRepositoryMemory from "./repository/module/module.repository.memory";
@@ -10,7 +10,7 @@ import NameError from "./value-objects/name/name.error";
 let enrollStudent: EnrollStudent;
 beforeEach(() => {
   const levelRepository = new LevelRepositoryMemory();
-  const classRepository = new ClassRepositoryMemory();
+  const classRepository = new ClassroomRepositoryMemory();
   const moduleRepository = new ModuleRepositoryMemory();
   const enrollmentRepository = new EnrollmentRepositoryMemory();
 
@@ -106,7 +106,7 @@ it("Should not enroll student over class capacity", () => {
     },
     level: "EM",
     module: "3",
-    class: "A",
+    class: "F",
   };
   const studentEnrollRequestB = {
     student: {
@@ -116,7 +116,7 @@ it("Should not enroll student over class capacity", () => {
     },
     level: "EM",
     module: "3",
-    class: "A",
+    class: "F",
   };
 
   const studentEnrollRequestC = {
@@ -127,11 +127,108 @@ it("Should not enroll student over class capacity", () => {
     },
     level: "EM",
     module: "3",
-    class: "A",
+    class: "F",
   };
   enrollStudent.execute(studentEnrollRequestA);
   enrollStudent.execute(studentEnrollRequestB);
   expect(() => enrollStudent.execute(studentEnrollRequestC)).toThrow(
     new Error("Class is over capacity")
   );
+});
+it("Should not enroll after que end of the class", () => {
+  const enrollmentRequest = {
+    student: {
+      name: "Maria Carolina Fonseca",
+      cpf: "681.845.980-33",
+      birthDate: "2002-03-12",
+    },
+    level: "EM",
+    module: "3",
+    class: "E",
+  };
+  expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(
+    new Error("Class is already finished")
+  );
+});
+
+it("Should not enroll after 25% of the start of the class", () => {
+  const enrollmentRequest = {
+    student: {
+      name: "Maria Carolina Fonseca",
+      cpf: "755.525.774-26",
+      birthDate: "2002-03-12"
+    },
+    level: "EM",
+    module: "1",
+    class: "C",
+  }
+  expect(() => enrollStudent.execute(enrollmentRequest)).toThrow(
+    new Error("Class is already started")
+  );
+});
+
+it.only("Should generate the invoices based on the number of installments, rounding each amount and applying the rest in the last invoice", () => {
+  const invoicesMock = [
+    {
+      instalment: 1,
+      value: 1416
+    },
+    {
+      instalment: 2,
+      value: 1416
+    },
+    {
+      instalment: 3,
+      value: 1416
+    },
+    {
+      instalment: 4,
+      value: 1416
+    },
+    {
+      instalment: 5,
+      value: 1416
+    },
+    {
+      instalment: 6,
+      value: 1416
+    },
+    {
+      instalment: 7,
+      value: 1416
+    },
+    {
+      instalment: 8,
+      value: 1416
+    },
+    {
+      instalment: 9,
+      value: 1416
+    },
+    {
+      instalment: 10,
+      value: 1416
+    },
+    {
+      instalment: 11,
+      value: 1416
+    },
+    {
+      instalment: 12,
+      value: 1424
+    },
+  ]
+
+  const enrollmentRequest = {
+    student: {
+      name: "Maria Carolina Fonseca",
+      cpf: "755.525.774-26",
+      birthDate: "2002-03-12"
+    },
+    level: "EM",
+    module: "1",
+    class: "A",
+    installments: 12
+  }
+  expect(enrollStudent.execute(enrollmentRequest).invoices).toStrictEqual(invoicesMock)
 });

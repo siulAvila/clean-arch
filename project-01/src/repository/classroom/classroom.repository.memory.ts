@@ -12,7 +12,7 @@ export default class ClassroomRepositoryMemory
         code: "A",
         capacity: 5,
         startDate: "2021-07-01",
-        endDate: "2021-12-15",
+        endDate: "2025-12-15",
       }),
       new Classroom({
         level: "EM",
@@ -20,7 +20,7 @@ export default class ClassroomRepositoryMemory
         code: "B",
         capacity: 5,
         startDate: "2021-05-01",
-        endDate: "2021-05-30",
+        endDate: "2025-05-30",
       }),
       new Classroom({
         level: "EM",
@@ -28,7 +28,7 @@ export default class ClassroomRepositoryMemory
         code: "C",
         capacity: 5,
         startDate: "2021-06-01",
-        endDate: "2021-12-15",
+        endDate: "2022-04-01",
       }),
       new Classroom({
         level: "EM",
@@ -37,6 +37,14 @@ export default class ClassroomRepositoryMemory
         capacity: 5,
         startDate: "2021-01-01",
         endDate: "2021-12-15",
+      }),
+      new Classroom({
+        level: "EM",
+        module: "3",
+        code: "F",
+        capacity: 2,
+        startDate: "2021-01-01",
+        endDate: "2025-12-15",
       })
     ];
   }
