@@ -1,4 +1,4 @@
-import Enrollment from "../../entity/enrollment/enrollment";
+import Enrollment from "../../entity/enrollment";
 
 export default interface EnrollmentRepositoryInterface {
   save(enrollment: Enrollment): void;

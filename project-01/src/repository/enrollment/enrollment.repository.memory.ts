@@ -1,5 +1,4 @@
-import Enrollment from "../../entity/enrollment/enrollment";
-import CPF from "../../value-objects/cpf/cpf";
+import Enrollment from "../../entity/enrollment";
 import EnrollmentRepositoryInterface from "./enrollment.repository.interface";
 
 export default class EnrollmentRepositoryMemory
@@ -18,7 +17,7 @@ export default class EnrollmentRepositoryMemory
     return this.enrolledStudents;
   }
 
-  findByCpf(cpf: string): any {
+  findByCpf(cpf: string): Enrollment | undefined {
     return this.enrolledStudents.find(
       (enrolledStudent) => enrolledStudent.student?.cpf === cpf
     );

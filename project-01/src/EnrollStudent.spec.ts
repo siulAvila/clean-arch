@@ -1,5 +1,5 @@
 import EnrollStudent from "./EnrollStudent";
-import Student from "./entity/student/student";
+import Student from "./entity/student";
 import ClassRepositoryMemory from "./repository/class/class.repository.memory";
 import EnrollmentRepositoryMemory from "./repository/enrollment/enrollment.repository.memory";
 import LevelRepositoryMemory from "./repository/level/level.repository.memory";

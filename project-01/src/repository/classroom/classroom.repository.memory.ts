@@ -30,6 +30,14 @@ export default class ClassroomRepositoryMemory
         startDate: "2021-06-01",
         endDate: "2021-12-15",
       }),
+      new Classroom({
+        level: "EM",
+        module: "3",
+        code: "E",
+        capacity: 5,
+        startDate: "2021-01-01",
+        endDate: "2021-12-15",
+      })
     ];
   }
 

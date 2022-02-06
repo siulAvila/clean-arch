@@ -1,5 +1,5 @@
-import Enrollment from "./entity/enrollment/enrollment";
-import Student from "./entity/student/student";
+import Enrollment from "./entity/enrollment";
+import Student from "./entity/student";
 import ClassRepositoryInteface from "./repository/class/class.repository.interface";
 import EnrollmentRepositoryInterface from "./repository/enrollment/enrollment.repository.interface";
 import LevelRepositoryInterface from "./repository/level/level.repository.interface";
@@ -69,11 +69,13 @@ export default class EnrollStudent {
     this.checkStudentAlreadyEnrolled(student);
     const enrollCode = this.generateEnrollCode(enrollmentRequest);
     const enrollment = new Enrollment(
-      student,
-      enrollmentRequest.level,
-      enrollmentRequest.module,
-      enrollmentRequest.class,
-      enrollCode
+      {
+        student,
+        level: enrollmentRequest.level,
+        module: enrollmentRequest.module,
+        clazz: enrollmentRequest.class,
+        code: enrollCode
+      }
     );
 
     this.enrollmentRepository.save(enrollment);
