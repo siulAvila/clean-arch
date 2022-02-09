@@ -167,7 +167,7 @@ it("Should not enroll after 25% of the start of the class", () => {
   );
 });
 
-it.only("Should generate the invoices based on the number of installments, rounding each amount and applying the rest in the last invoice", () => {
+it("Should generate the invoices based on the number of installments, rounding each amount and applying the rest in the last invoice", () => {
   const invoicesMock = [
     {
       instalment: 1,

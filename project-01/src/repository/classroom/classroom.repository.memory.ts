@@ -54,10 +54,10 @@ export default class ClassroomRepositoryMemory
   }
 
   getByCode(code: string): Classroom {
-    const clazz = this.classes.find((clazz) => clazz.code === code);
-    if (!clazz) {
+    const classroom = this.classes.find((classroom) => classroom.code === code);
+    if (!classroom) {
       throw new Error("class not found");
     }
-    return clazz;
+    return classroom;
   }
 }

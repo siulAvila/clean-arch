@@ -1,10 +1,13 @@
+import Classroom from "./classroom";
+import Level from "./level";
+import Module from "./modules";
 import Student from "./student";
 
 export default class Enrollment {
   student: Student;
-  level: string;
-  module: string;
-  clazz: string;
+  level: Level;
+  module: Module;
+  classroom: Classroom;
   code: string;
   invoices: any[]
 
@@ -12,14 +15,14 @@ export default class Enrollment {
     { student,
       level,
       module,
-      clazz,
+      classroom,
       code,
       invoices,
     }: {
       student: Student,
-      level: string,
-      module: string,
-      clazz: string,
+      level: Level,
+      module: Module,
+      classroom: Classroom,
       code: string,
       invoices: any[]
     }
@@ -27,7 +30,7 @@ export default class Enrollment {
     this.student = student;
     this.level = level;
     this.module = module;
-    this.clazz = clazz;
+    this.classroom = classroom;
     this.code = code;
     this.invoices = invoices
   }

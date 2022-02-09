@@ -1,5 +1,6 @@
 import Classroom from "./entity/classroom";
 import Enrollment from "./entity/enrollment";
+import Level from "./entity/level";
 import Module from "./entity/modules";
 import Student from "./entity/student";
 import ClassroomRepositoryInteface from "./repository/classroom/classroom.repository.interface";
@@ -38,12 +39,12 @@ export default class EnrollStudent {
     }
   }
 
-  private checkOverCapacity(clazz: Classroom, level: any, module: Module) {
-    const classCapacity = clazz.capacity;
+  private checkOverCapacity(classroom: Classroom, level: Level, module: Module) {
+    const classCapacity = classroom.capacity;
 
     const studentEnrolledInClass = this.enrollmentRepository.findAllByClass(
       module.code,
-      clazz.code,
+      classroom.code,
       level.code
     ).length;
     if (studentEnrolledInClass === classCapacity) {
@@ -51,23 +52,23 @@ export default class EnrollStudent {
     }
   }
 
-  private checkIfClassIsAlreadyFinished(clazz: Classroom): boolean {
+  private checkIfClassIsAlreadyFinished(classroom: Classroom): boolean {
     const today = new Date().getTime();
-    const classEndDate = new Date(clazz.endDate).getTime()
+    const classEndDate = new Date(classroom.endDate).getTime()
     if (today > classEndDate) {
       throw new Error("Class is already finished");
     }
     return false;
   }
 
-  private checkIfClassIsAlreadyStarted(clazz: Classroom): boolean {
+  private checkIfClassIsAlreadyStarted(classroom: Classroom): boolean {
     const MILISECONDS_PER_SECOND = 1000;
     const SECONDS_PER_HOUR = 3600;
     const HOURS_PER_DAY = 24;
     const MILISECONDS_PER_DAY = MILISECONDS_PER_SECOND * SECONDS_PER_HOUR * HOURS_PER_DAY
     const todayInTime = new Date().getTime();
-    const classEndDateInTime = new Date(clazz.endDate).getTime()
-    const classStartDateInTime = new Date(clazz.startDate).getTime()
+    const classEndDateInTime = new Date(classroom.endDate).getTime()
+    const classStartDateInTime = new Date(classroom.startDate).getTime()
 
     const classTotalOfDays = (classEndDateInTime - classStartDateInTime) / MILISECONDS_PER_DAY;
     const daysBetweenEnrollAndStartOfClass = (todayInTime - classStartDateInTime) / MILISECONDS_PER_DAY;
@@ -104,25 +105,25 @@ export default class EnrollStudent {
         birthDate
       }
     );
-    const clazz = this.classroomRepository.getByCode(enrollmentRequest.class);
+    const classroom = this.classroomRepository.getByCode(enrollmentRequest.class);
     const level = this.levelRepository.getByCode(enrollmentRequest.level);
     const module = this.moduleRepository.getByCode(
       enrollmentRequest.module,
       level.code
     );
     this.checkStudentHasMinimiumAge(module, student);
-    this.checkOverCapacity(clazz, level, module);
+    this.checkOverCapacity(classroom, level, module);
     this.checkStudentAlreadyEnrolled(student);
-    this.checkIfClassIsAlreadyFinished(clazz);
-    this.checkIfClassIsAlreadyStarted(clazz);
+    this.checkIfClassIsAlreadyFinished(classroom);
+    this.checkIfClassIsAlreadyStarted(classroom);
     const enrollCode = this.generateEnrollCode(enrollmentRequest);
     const invoices = this.generateInvoices(module, enrollmentRequest.installments)
     const enrollment = new Enrollment(
       {
         student,
-        level: enrollmentRequest.level,
-        module: enrollmentRequest.module,
-        clazz: enrollmentRequest.class,
+        level,
+        module,
+        classroom,
         code: enrollCode,
         invoices
       }

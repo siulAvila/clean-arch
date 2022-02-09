@@ -4,6 +4,6 @@ export default interface EnrollmentRepositoryInterface {
   save(enrollment: Enrollment): void;
   findAll(): Enrollment[];
   findByCpf(cpf: string): any;
-  findAllByClass(module: string, clazz: string, level: string): Enrollment[];
+  findAllByClass(module: string, classroom: string, level: string): Enrollment[];
   count(): number;
 }

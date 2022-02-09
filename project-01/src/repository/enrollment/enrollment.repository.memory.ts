@@ -23,12 +23,12 @@ export default class EnrollmentRepositoryMemory
     );
   }
 
-  findAllByClass(module: string, clazz: string, level: string): Enrollment[] {
+  findAllByClass(enrollModuleCode: string, enrollClassroomCode: string, enrollLevelCode: string): Enrollment[] {
     return this.enrolledStudents.filter(
-      (enrolledStudent) =>
-        enrolledStudent.module === module &&
-        enrolledStudent.clazz === clazz &&
-        enrolledStudent.level === level
+      ({ module, classroom, level }) =>
+        module.code === enrollModuleCode &&
+        classroom.code === enrollClassroomCode &&
+        level.code === enrollLevelCode
     );
   }
 
