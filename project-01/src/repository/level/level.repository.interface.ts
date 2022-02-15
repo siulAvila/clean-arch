@@ -1,4 +1,6 @@
+import Level from "../../entity/level";
+
 export default interface LevelRepositoryInterface {
-  getAll(): any[];
-  getByCode(code: string): any;
+  getAll(): Level[];
+  getByCode(code: string): Level;
 }

@@ -78,7 +78,7 @@ it("Should generate enrollment code", () => {
 
   const enrollment = enrollStudent.execute(enrollmentRequest);
   const enrollCodeExpected = `${new Date().getFullYear()}EM3A0001`
-  expect(enrollment.code).toEqual(enrollCodeExpected);
+  expect(enrollment.code.value).toEqual(enrollCodeExpected);
 });
 
 it("Should not enroll student below minimum age", () => {

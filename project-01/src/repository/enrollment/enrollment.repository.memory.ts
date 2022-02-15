@@ -24,6 +24,7 @@ export default class EnrollmentRepositoryMemory
   }
 
   findAllByClass(enrollModuleCode: string, enrollClassroomCode: string, enrollLevelCode: string): Enrollment[] {
+
     return this.enrolledStudents.filter(
       ({ module, classroom, level }) =>
         module.code === enrollModuleCode &&

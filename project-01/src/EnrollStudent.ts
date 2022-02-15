@@ -23,21 +23,7 @@ export default class EnrollStudent {
     }
   }
 
-  private generateEnrollCode({ level, module, class: className }: any) {
-    const currentYear = new Date().getFullYear();
-    const count = this.enrollmentRepository.count();
-    const sequence = `${count + 1}`.padStart(4, "0");
-    return `${currentYear}${level}${module}${className}${sequence}`;
-  }
 
-  private checkStudentHasMinimiumAge(module: Module, student: Student) {
-    const studentAge = student.getAge();
-    const minimumAge = module.minimumAge;
-
-    if (studentAge < minimumAge) {
-      throw new Error("Student below minimum age");
-    }
-  }
 
   private checkOverCapacity(classroom: Classroom, level: Level, module: Module) {
     const classCapacity = classroom.capacity;
@@ -111,20 +97,21 @@ export default class EnrollStudent {
       enrollmentRequest.module,
       level.code
     );
-    this.checkStudentHasMinimiumAge(module, student);
+    const sequence = this.enrollmentRepository.count() + 1;
     this.checkOverCapacity(classroom, level, module);
     this.checkStudentAlreadyEnrolled(student);
     this.checkIfClassIsAlreadyFinished(classroom);
     this.checkIfClassIsAlreadyStarted(classroom);
-    const enrollCode = this.generateEnrollCode(enrollmentRequest);
     const invoices = this.generateInvoices(module, enrollmentRequest.installments)
+    const date = new Date();
     const enrollment = new Enrollment(
       {
         student,
         level,
         module,
         classroom,
-        code: enrollCode,
+        sequence,
+        date,
         invoices
       }
     );
